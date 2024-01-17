@@ -6,9 +6,10 @@ class Server:
         self.address = address
         self.port = int(port)
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.buffer = 4096
         
     def start(self):
-        print("Starting up on {} port ".format(self.address, self.port))
+        print("Starting up on {} port {}".format(self.address, self.port))
         self.connect()
         self.reviveData()
         
@@ -21,9 +22,12 @@ class Server:
             connection, client_address = self.sock.accept()
             try:
                 print("Connection from {} port {}".format(client_address[0], client_address[1]))
+                header = connection.recv(5)
+                filename_length = int.from_bytes(header[:1])
+                filesize = int.from_bytes(header[1:])
+                print(filename_length, filesize)
                 while True:
-                    data = connection.recvfrom(32)
-                    print(data)
+                    data = connection.recv(1400)
                     if data:
                         print("Recived data: ", data)
                     else:
