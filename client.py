@@ -23,7 +23,7 @@ class Client:
         self.sendData()
         
     def sendData(self):
-        path = "./video/sample-5s.mp4"
+        path = "./video/1.mp4"
         try:
             with open(path, "rb") as f:
                 print(os.SEEK_END)

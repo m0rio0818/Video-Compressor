@@ -30,11 +30,14 @@ class Server:
                     raise Exception('No data  to read from client')
                 
                 filename = connection.recv(filename_length).decode()
+                print(filename)
                 
                 if not os.path.exists(self.dpath):
                     os.makedirs(self.dpath)
                 
                 # もしそのファイルが既に存在している場合。
+                totalRecived = 0
+                fSize = filesize
                 if not os.path.exists(os.path.join(self.dpath, filename)):
                     print("そのファイルは存在していません。")
                     message = self.responseStatus(400)
@@ -43,8 +46,12 @@ class Server:
                         while filesize > 0:
                             data = connection.recv(filesize if filesize  <= self.buffer else self.buffer)
                             f.write(data)
-                            print("Recived {} bytes".format(len(data)))
+                            # print("Recived {} bytes".format(len(data)))
                             filesize -= len(data)
+                            totalRecived += len(data)
+                    
+                    if totalRecived != fSize:
+                        print("ファイル作成の途中で中断されました。")
                     print("ファイルが作成されました。")     
                 
                 else:
