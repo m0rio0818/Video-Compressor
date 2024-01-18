@@ -36,23 +36,29 @@ class Server:
                 
                 # もしそのファイルが既に存在している場合。
                 if not os.path.exists(os.path.join(self.dpath, filename)):
+                    print("そのファイルは存在していません。")
+                    message = self.responseStatus(400)
+                    connection.send(message)
                     with open(os.path.join(self.dpath, filename), "wb+" ) as f:
                         while filesize > 0:
                             data = connection.recv(filesize if filesize  <= self.buffer else self.buffer)
                             f.write(data)
                             print("Recived {} bytes".format(len(data)))
                             filesize -= len(data)
-                            print(filesize)        
-                            if data:
-                                print("Recived data: ", data)
-                            else:
-                                print("No data from:" , client_address)
-                                break
+                    print("ファイルが作成されました。")     
+                
                 else:
                     print("そのファイル名+pathはすでに存在しています。")
+                    message = self.responseStatus(300)
+                    print(message)
+                    connection.send(message)
+                    
             finally:
                 print("Closing current connection")
                 connection.close()
+    
+    def responseStatus(self, status):
+        return status.to_bytes(2, "big")
       
                
         

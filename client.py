@@ -39,15 +39,25 @@ class Client:
                 
                 if self.checkFileType(filename) == "mp4":
                     print("ファイル拡張子は mp4です")
+                    header = self.makeHeader(len(filename), filesize)
+                    # filesize, filename_lengthを送信
+                    self.sock.sendall(header)
+                    # filenameを送信
+                    self.sock.sendall(bytes(filename, "utf-8"))
+                    data = self.sock.recv(2)
+    
+                    if int.from_bytes(data) == 400:
+                        print("ファイルは存在してません。")
+                        message = f.read()
+                        print("sending data.....")
+                        self.sock.sendall(message)
+                    else:
+                        print("ファイルはすでに存在しています。")
+            
+                    
+                else:
+                    print("その拡張子のファイルは送信できません。")
                 
-                # まずファイルサイズを送信
-                header = self.makeHeader(len(filename), filesize)
-                self.sock.sendall(header)
-                self.sock.sendall(bytes(filename, "utf-8"))
-                message = f.read()
-                print(message)
-                print("sending data.....")
-                self.sock.sendall(message)
         except KeyboardInterrupt :
             print("キーボードが押されました。")
             
