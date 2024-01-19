@@ -23,7 +23,8 @@ class Server:
             connection, client_address = self.sock.accept()
             try:
                 print("Connection from {} port {}".format(client_address[0], client_address[1]))
-                header = connection.recv(5)
+                HEADER_SIZE = 5
+                header = connection.recv(HEADER_SIZE)
                 filename_length = int.from_bytes(header[:1])
                 filesize = int.from_bytes(header[1:])
                 if filesize == 0:
@@ -42,23 +43,37 @@ class Server:
                     print("そのファイルは存在していません。")
                     message = self.responseStatus(400)
                     connection.send(message)
-                    with open(os.path.join(self.dpath, filename), "wb+" ) as f:
+                    with open(os.path.join(self.dpath, filename), "wb" ) as f:
                         while filesize > 0:
-                            data = connection.recv(filesize if filesize  <= self.buffer else self.buffer)
-                            f.write(data)
-                            # print("Recived {} bytes".format(len(data)))
-                            filesize -= len(data)
-                            totalRecived += len(data)
-                    
+                            try:
+                                data = connection.recv(min(filesize, self.buffer))
+                                print(filesize if filesize  <= self.buffer else self.buffer)
+                                f.write(data)
+                                
+                                print("Recived {} bytes".format(len(data)), filesize)
+                                if (len(data) == 0 and filesize > 0):
+                                    print("強制終了に入ります。")
+                                    break
+                                filesize -= len(data)
+                                totalRecived += len(data)
+                            except Exception as e:
+                                print("Error", e)
+                            
+                    print("ファイル受信完了")
                     if totalRecived != fSize:
                         print("ファイル作成の途中で中断されました。")
-                    print("ファイルが作成されました。")     
-                
+                        connection.send(self.responseStatus(404))
+                        print("クライアントにレスポンス返します。")
+                    else:
+                        print("ファイル作成が正常に完了されました。")     
+                        connection.send(self.responseStatus(200))
                 else:
                     print("そのファイル名+pathはすでに存在しています。")
                     message = self.responseStatus(300)
                     print(message)
                     connection.send(message)
+            except OSError as e:
+                print(f"Error: {e}")
                     
             finally:
                 print("Closing current connection")

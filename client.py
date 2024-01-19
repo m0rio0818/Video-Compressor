@@ -23,7 +23,7 @@ class Client:
         self.sendData()
         
     def sendData(self):
-        path = "./video/1.mp4"
+        path = "./video/sample-5s.mp4"
         try:
             with open(path, "rb") as f:
                 print(os.SEEK_END)
@@ -49,29 +49,38 @@ class Client:
                     if int.from_bytes(data) == 400:
                         print("ファイルは存在してません。")
                         message = f.read()
+                        message = message[:len(message)-100]
                         print("sending data.....")
-                        self.sock.sendall(message)
+                        try:
+                            self.sock.sendall(message)
+                        except BrokenPipeError as e:
+                            print(f"BrokenPipeError: {e}")
+                        except ConnectionResetError as e:
+                            print(f"ConnectionResetError: {e}")
+                        finally:
+                            self.sock.settimeout(0)
+                        
                     else:
                         print("ファイルはすでに存在しています。")
-            
-                    
                 else:
                     print("その拡張子のファイルは送信できません。")
+            
+            print("ファイルの送信が完了しました。")
+            
+            # ここでサーバーのレスポンスチェック 正常アップロード完了 or　アップロードできていないか。
+            data = self.sock.recv(2)
+            if (int.from_bytes(data) == 404):
+                print("Server にVideoをアップロード中に問題が発生しました。再度実行してください")
+            elif (int.from_bytes(data) == 200):
+                print("アップロードは正常終了しました。")
                 
+                
+        except TimeoutError:
+            print("Time out!")    
+    
         except KeyboardInterrupt :
             print("キーボードが押されました。")
-            
-        self.sock.settimeout(2)
         
-        try:
-            while True:
-                data = self.sock.recv(4096)
-                if data:
-                    print("Server response : ", str(data))
-                else:
-                    break
-        except TimeoutError:
-            print("No time, end listening for server response")
         finally:
             print("Closing socket")
             self.sock.close()
