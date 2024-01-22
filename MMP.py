@@ -7,16 +7,19 @@ class MMP:
     #     self.mediaType = mediaType
     #     self.payload = payload
     
-    def makeHeader(self, jsonSize, mediaTypeSize, payloadSize):
+    @staticmethod
+    def makeHeader(jsonSize, mediaTypeSize, payloadSize):
         return  jsonSize.to_bytes(16, "big") + mediaTypeSize.to_bytes(1, "big") + payloadSize.to_bytes(47, "big")
     
     # 動画を圧縮
-    def compressionData(self, input, output):                #圧縮率(18~28)
-        command = ["ffmpeg","-i", input, "-c:v libx264", "-crf", "23", "-c:a aac", "-b:a 128k", output]
+    def compressionData(input_file, output_file):                #圧縮率(18~28)
+        command = ["ffmpeg", "-i", input_file, "-c:v","libx264", "-crf", "23", "-c:a","aac", "-b:a", "128k", output_file]
+        # "ffmpeg" "-i" "./temp/something.mp4" "-c:v libx264" "-crf 23" "-c:a aac" "-b:a 128k" "./temp/v.mp4"
+        subprocess.call(command)
         return 
     
     # 動画の解像度を変更する
-    def changeResolution(self, input, output):
+    def changeResolution(input, output):
         command = ["ffmpeg","-i", input,  "-vf", "scale=1280:720",  output]
         return
     

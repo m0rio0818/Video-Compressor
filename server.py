@@ -1,5 +1,7 @@
 import socket
 import os
+import json
+import MMP
 
 class Server:
     def __init__(self, address, port) -> None:
@@ -59,25 +61,29 @@ class Server:
                 jsonData = connection.recv(jsonSize).decode()
                 mediaType = connection.recv(mediaTypeSize).decode()
                 self.savePayload(connection, payloadSize, mediaType)
+
+                print("ファイルは一旦サーバーに保存されました。")
+                jsonReqeuest = json.loads(jsonData)
+               
+                method = jsonReqeuest["method"]
+                params = jsonReqeuest["params"]
+                print("method: ",method, "params: ",params)
                 
-                method = jsonData["method"]
-                params = jsonData["params"]
                 # 圧縮 compression
                 # 解像度　resolution
                 # アスペクト aspect
                 # 音声変更 mp3
                 # GIForWEBM gifwebm
-                
                 if method == "compression":
-                    self.compressionData()
+                    MMP.MMP.compressionData(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.mp4"))
                 elif method == "resolution":
-                    self.changeResolution()
+                    MMP.MMP.changeResolution()
                 elif method == "aspect":
-                    self.changeAspect()
+                    MMP.MMP.changeAspect()
                 elif method == "mp3":
-                    self.changeToMp3()
+                    MMP.MMP.changeToMp3()
                 elif method == "gifwebm":
-                    self.makeGIForWEBM()               
+                    MMP.MMP.makeGIForWEBM()               
             
             except OSError as e:
                 print(f"Error: {e}")
@@ -88,25 +94,7 @@ class Server:
     
    
     
-    # 動画を圧縮
-    def compressionData(self):
-        return 
-    
-    # 動画の解像度を変更する
-    def changeResolution(self):
-        return
-    
-    # 動画のアスペクト比を変更
-    def changeAspect(self):
-        return
-    
-    # 動画 to 音声
-    def changeToMp3(self):
-        return
-    
-    # 指定した時間範囲で GIF や WEBM を作成
-    def makeGIForWEBM(self):
-        return
+   
       
       
 
