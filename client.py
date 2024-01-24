@@ -2,7 +2,7 @@ import socket
 import os
 import sys
 import json
-import MMP
+from MMP import MMP
 
 
 class Client:
@@ -25,9 +25,6 @@ class Client:
         self.conncet()
         self.sendData()
         
-    def inputAndCheckMP4(self):
-        path = "./video/sample.mp4"
-        pass
         
     def sendData(self):
         path = "./video/sample.mp4"
@@ -47,9 +44,8 @@ class Client:
                     json_data = f2.read()
                     json_len = len(json_data)
                 print("data: ",json_data,"jsonlen" ,json_len)
-                    
-                print(json_len, len(self.checkFileType(filename)), filesize)
-                header = MMP.MMP.makeHeader(json_len, len(self.checkFileType(filename)), filesize)
+                
+                header = MMP.makeHeader(json_len, len(self.checkFileType(filename)), filesize)
                 # ヘッダーの送信
                 self.sock.sendall(header)
             

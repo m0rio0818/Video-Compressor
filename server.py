@@ -1,7 +1,7 @@
 import socket
 import os
 import json
-import MMP
+from MMP import MMP
 
 class Server:
     def __init__(self, address, port) -> None:
@@ -75,15 +75,15 @@ class Server:
                 # 音声変更 mp3
                 # GIForWEBM gifwebm
                 if method == "compression":
-                    MMP.MMP.compressionData(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.mp4"))
+                    MMP.compressionData(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.mp4"))
                 elif method == "resolution":
-                    MMP.MMP.changeResolution()
+                    MMP.changeResolution()
                 elif method == "aspect":
-                    MMP.MMP.changeAspect()
+                    MMP.changeAspect()
                 elif method == "mp3":
-                    MMP.MMP.changeToMp3()
+                    MMP.changeToMp3()
                 elif method == "gifwebm":
-                    MMP.MMP.makeGIForWEBM()               
+                    MMP.makeGIForWEBM()               
             
             except OSError as e:
                 print(f"Error: {e}")
