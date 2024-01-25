@@ -58,8 +58,6 @@ class Server:
         elif method == "gifwebm":
             MMP.makeGIForWEBM(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.gif"))     
             
-        
-        
                 
                 
     def reviveData(self):
@@ -111,6 +109,15 @@ class Server:
             finally:
                 print("Closing current connection")
                 connection.close()
+                
+                
+    def loadAndSend(self, path):
+        try:
+            with open (path, "rb") as f:
+                f.seek(0, os.SEEK_END)
+                filesize = f.tell()
+        finally:
+            print("a")
     
    
     
