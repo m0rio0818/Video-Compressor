@@ -40,6 +40,26 @@ class Server:
                 except Exception as e:
                     print("Error ", e)
             print("データの受信は終了しました。")
+            
+    def covertMP4(self, mediaType, method, params):
+        # 圧縮 compression
+        # 解像度　resolution
+        # アスペクト aspect
+        # 音声変更 mp3
+        # GIForWEBM gifwebm
+        if method == "compression":
+            MMP.compressionData(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.mp4"))
+        elif method == "resolution":
+            MMP.changeResolution(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.mp4"), 0, params[1])
+        elif method == "aspect":
+            MMP.changeAspect(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.mp4"), 0, params[1])
+        elif method == "mp3":
+            MMP.changeToMp3(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.mp3"), params[0])
+        elif method == "gifwebm":
+            MMP.makeGIForWEBM(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.gif"))     
+            
+        
+        
                 
                 
     def reviveData(self):
@@ -67,7 +87,7 @@ class Server:
                
                 method = jsonReqeuest["method"]
                 params = jsonReqeuest["params"]
-                print("method: ",method, "params: ",params)
+                print("method: ",method, "params: ",params,)
                 
                 # 圧縮 compression
                 # 解像度　resolution
@@ -77,13 +97,13 @@ class Server:
                 if method == "compression":
                     MMP.compressionData(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.mp4"))
                 elif method == "resolution":
-                    MMP.changeResolution()
+                    MMP.changeResolution(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.mp4"), 0, params[1])
                 elif method == "aspect":
-                    MMP.changeAspect()
+                    MMP.changeAspect(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.mp4"), 0, params[1])
                 elif method == "mp3":
-                    MMP.changeToMp3()
+                    MMP.changeToMp3(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a"), params[0])
                 elif method == "gifwebm":
-                    MMP.makeGIForWEBM()               
+                    MMP.makeGIForWEBM(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a"), params[0])     
             
             except OSError as e:
                 print(f"Error: {e}")

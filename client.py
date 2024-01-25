@@ -17,6 +17,9 @@ class Client:
     def conncet(self):
         try:
             self.sock.connect((self.server_address, self.server_port))
+        except ConnectionError:
+            print("サーバーが起動されていません。")
+            sys.exit(1)
         except socket.error as err:
             print("err", err)
             sys.exit(1)
