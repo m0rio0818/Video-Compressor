@@ -47,17 +47,19 @@ class Server:
         # アスペクト aspect
         # 音声変更 mp3
         # GIForWEBM gifwebm
+        inputpath = os.path.join(self.dpath, "something." + mediaType)
+        outputpath  = os.path.join(self.dpath, "a")
         if method == "compression":
-            MMP.compressionData(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.mp4"))
+            MMP.compressionData(inputpath, outputpath)
         elif method == "resolution":
-            MMP.changeResolution(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.mp4"), 0, params[1])
+            MMP.changeResolution(inputpath, outputpath, 0, params[1])
         elif method == "aspect":
-            MMP.changeAspect(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.mp4"), 0, params[1])
+            MMP.changeAspect(inputpath, outputpath, 0, params[1])
         elif method == "mp3":
-            MMP.changeToMp3(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.mp3"), params[0])
+            MMP.changeToMp3(inputpath, outputpath, params[0])
         elif method == "gifwebm":
-            MMP.makeGIForWEBM(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.gif"))     
-            
+            MMP.makeGIForWEBM(inputpath, outputpath, params[0])
+            self.loadAndSend(outputpath+".gif") 
                 
                 
     def reviveData(self):
@@ -92,16 +94,21 @@ class Server:
                 # アスペクト aspect
                 # 音声変更 mp3
                 # GIForWEBM gifwebm
+                inputpath = os.path.join(self.dpath, "something." + mediaType)
+                outputpath  = os.path.join(self.dpath, "a")
                 if method == "compression":
-                    MMP.compressionData(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.mp4"))
+                    MMP.compressionData(inputpath, outputpath)
                 elif method == "resolution":
-                    MMP.changeResolution(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.mp4"), 0, params[1])
+                    MMP.changeResolution(inputpath, outputpath, 0, params[1])
                 elif method == "aspect":
-                    MMP.changeAspect(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a.mp4"), 0, params[1])
+                    MMP.changeAspect(inputpath, outputpath, 0, params[1])
                 elif method == "mp3":
-                    MMP.changeToMp3(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a"), params[0])
+                    MMP.changeToMp3(inputpath, outputpath, params[0])
                 elif method == "gifwebm":
-                    MMP.makeGIForWEBM(os.path.join(self.dpath, "something." + mediaType), os.path.join(self.dpath, "a"), params[0])     
+                    MMP.makeGIForWEBM(inputpath, outputpath, params[0])
+                    self.loadAndSend(connection, outputpath+".gif")
+                    self.deleteVideo(outputpath + ".gif")    
+            
             
             except OSError as e:
                 print(f"Error: {e}")
@@ -111,14 +118,40 @@ class Server:
                 connection.close()
                 
                 
-    def loadAndSend(self, path):
+    def loadAndSend(self, connection, path):
         try:
             with open (path, "rb") as f:
                 f.seek(0, os.SEEK_END)
                 filesize = f.tell()
+                f.seek(0, 0)
+                
+                if filesize > pow(2, 32):
+                    raise Exception("file must be below 4GB")
+            
+                filename = os.path.basename(f.name)
+                
+                with open("./json/request.json", "r") as f2:
+                    json_data = f2.read()
+                    print(json_data)
+                    json_len = len(json_data)
+                
+                header = MMP.makeHeader(json_len, len(MMP.checkFileType(filename)), filesize)
+                print("Response Header: ", header, len(header))
+                # ヘッダーの送信
+                connection.sendall(header)
+                print("ResponseFILENAME: ",filename)
+                
+                # bodyの送信
+                converted_data = json_data.encode("utf-8") + MMP.checkFileType(filename).encode("utf-8") + f.read()
+                connection.sendall(converted_data)
+                
         finally:
             print("a")
     
+    
+    def deleteVideo(self, path):
+        if os.path.exists(path):
+            os.remove(path)
    
     
    

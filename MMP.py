@@ -5,7 +5,10 @@ class MMP:
     @staticmethod
     def makeHeader(jsonSize, mediaTypeSize, payloadSize):
         return  jsonSize.to_bytes(16, "big") + mediaTypeSize.to_bytes(1, "big") + payloadSize.to_bytes(47, "big")
-    
+
+    def checkFileType(filename):
+        return filename[filename.find(".")+1:]     
+
     # 動画を圧縮
     def compressionData(input_file, output_file,):                #圧縮率(18~28)
         command = ["ffmpeg", "-i", input_file, "-c:v","libx264", "-crf", "23", "-c:a","aac", "-b:a", "128k", output_file]
@@ -17,11 +20,11 @@ class MMP:
     def changeResolution(input, output, width= None, height = None):
         print("HEIGHT: ",width, "HEIGHT", height)
         if (height == None or height == 0): 
-            command = ["ffmpeg","-i", input,  "-s", "scale=-1:{}".format(width),  output]
+            command = ["ffmpeg","-i", input,  "-s", "scale=-1:{}".format(width),   "{}.{}".format(output, "mp4")]
         elif (width == None or width == 0):
-            command = ["ffmpeg","-i", input,  "-s", "scale={}:-1".format(height),  output]
+            command = ["ffmpeg","-i", input,  "-s", "scale={}:-1".format(height),  "{}.{}".format(output, "mp4")]
         else:
-            command = ["ffmpeg","-i", input,  "-vf", "scale={}:{}".format(width, height),  output]
+            command = ["ffmpeg","-i", input,  "-vf", "scale={}:{}".format(width, height),   "{}.{}".format(output, "mp4")]
         subprocess.call(command)
         return
     
@@ -31,7 +34,7 @@ class MMP:
         if (height == None or height <= 0 or width == None or width <= 0): 
             command = ["ffmpeg","-i", input,  "-vf", "setsar=-1:-1",  output]
         else:
-            command = ["ffmpeg","-i", input,  "-vf", "setsar={}:{}".format(width, height),  output]
+            command = ["ffmpeg","-i", input,  "-vf", "setsar={}:{}".format(width, height),   "{}.{}".format(output, "mp4")]
         subprocess.call(command)
         return
     
