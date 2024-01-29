@@ -73,9 +73,7 @@ class Client:
         
         
     def savePayload(self, connection, filesize, mediaType):
-        totalRecived = 0
-        fSize = filesize
-        
+        totalRecived = 0        
         print("mediaTYpe",mediaType)
         with open(os.path.join("video/something." + mediaType), "wb") as f:
             while filesize > 0:

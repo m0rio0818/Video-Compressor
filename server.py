@@ -151,12 +151,7 @@ class Server:
     
     def deleteVideo(self, path):
         if os.path.exists(path):
-            os.remove(path)
-   
-    
-   
-      
-      
+            os.remove(path)      
 
                
         
