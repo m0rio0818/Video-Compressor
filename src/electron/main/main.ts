@@ -6,7 +6,8 @@ const createWindow = () => {
     height: 600
   })
 
-  window.loadFile("src/electron/renderer/index.html")
+  window.loadFile("index.html")
+//   console.log(window.loadFile("src/electron/renderer/index.html"))
 }
 
 app.whenReady().then(() => {
