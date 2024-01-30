@@ -1,1 +1,5 @@
-console.log('Hello from the renderer process!');
+import { Controller } from "./controller/contlloler.js";
+
+// render the initial view
+Controller.renderInitialPage()
+
