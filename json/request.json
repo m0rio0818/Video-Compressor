@@ -1,5 +1,6 @@
 {
-    "method": "gifwebm", 
-    "params": ["gif"], 
+    "method": "mp3", 
+    "params": ["high"], 
+    "ans" : "mp3",
     "id": 1
 }

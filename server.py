@@ -41,25 +41,32 @@ class Server:
                     print("Error ", e)
             print("データの受信は終了しました。")
             
-    def covertMP4(self, mediaType, method, params):
+    def covert_MP4_Video(self, connection, input_path, output_path, method, params):
         # 圧縮 compression
         # 解像度　resolution
         # アスペクト aspect
         # 音声変更 mp3
         # GIForWEBM gifwebm
-        inputpath = os.path.join(self.dpath, "something." + mediaType)
-        outputpath  = os.path.join(self.dpath, "a")
         if method == "compression":
-            MMP.compressionData(inputpath, outputpath)
+            MMP.compressionData(input_path, output_path)
+            self.loadAndSend(connection, output_path)
+            self.deleteVideo(output_path)   
         elif method == "resolution":
-            MMP.changeResolution(inputpath, outputpath, 0, params[1])
+            MMP.changeResolution(input_path, output_path, 0, params[1])
+            self.loadAndSend(connection, output_path)
+            self.deleteVideo(output_path)   
         elif method == "aspect":
-            MMP.changeAspect(inputpath, outputpath, 0, params[1])
+            MMP.changeAspect(input_path, output_path, 0, params[1])
+            self.loadAndSend(connection, output_path)
+            self.deleteVideo(output_path)   
         elif method == "mp3":
-            MMP.changeToMp3(inputpath, outputpath, params[0])
+            MMP.changeToMp3(input_path, output_path, params[0])
+            self.loadAndSend(connection, output_path)
+            self.deleteVideo(output_path)   
         elif method == "gifwebm":
-            MMP.makeGIForWEBM(inputpath, outputpath, params[0])
-            self.loadAndSend(outputpath+".gif") 
+            MMP.makeGIForWEBM(input_path, output_path, params[0])
+            self.loadAndSend(connection, output_path)
+            self.deleteVideo(output_path)   
                 
                 
     def reviveData(self):
@@ -87,28 +94,19 @@ class Server:
                
                 method = jsonReqeuest["method"]
                 params = jsonReqeuest["params"]
-                print("method: ",method, "params: ",params,)
+                ans = jsonReqeuest["ans"]
+        
+                print("method: ", method, "params: ", params,"ans:", ans)
                 
                 # 圧縮 compression
                 # 解像度　resolution
                 # アスペクト aspect
                 # 音声変更 mp3
                 # GIForWEBM gifwebm
-                inputpath = os.path.join(self.dpath, "something." + mediaType)
-                outputpath  = os.path.join(self.dpath, "a")
-                if method == "compression":
-                    MMP.compressionData(inputpath, outputpath)
-                elif method == "resolution":
-                    MMP.changeResolution(inputpath, outputpath, 0, params[1])
-                elif method == "aspect":
-                    MMP.changeAspect(inputpath, outputpath, 0, params[1])
-                elif method == "mp3":
-                    MMP.changeToMp3(inputpath, outputpath, params[0])
-                elif method == "gifwebm":
-                    MMP.makeGIForWEBM(inputpath, outputpath, params[0])
-                    self.loadAndSend(connection, outputpath+".gif")
-                    self.deleteVideo(outputpath + ".gif")    
-            
+                input_path = os.path.join(self.dpath, "something.{}".format(mediaType))
+                output_path  = os.path.join(self.dpath, "temp.{}".format(ans))
+
+                self.covert_MP4_Video(connection, input_path, output_path, method, params)
             
             except OSError as e:
                 print(f"Error: {e}")
@@ -129,6 +127,7 @@ class Server:
                     raise Exception("file must be below 4GB")
             
                 filename = os.path.basename(f.name)
+                print("filename: ",filename, "filetype: ",MMP.checkFileType(filename))
                 
                 with open("./json/request.json", "r") as f2:
                     json_data = f2.read()

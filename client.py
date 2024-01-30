@@ -13,6 +13,7 @@ class Client:
         self.port = int(port)
         self.buffer = 4096
         self.server_port = int(server_port)
+        self.dpath = "video"
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
         
@@ -27,14 +28,18 @@ class Client:
             sys.exit(1)
             
     def start(self):
-        path = "./video/sample.mp4"
-        if os.path.exists(path):    
+        input_path = "./video/sample.mp4"
+        output_filename = "sample"
+        if os.path.exists(input_path):    
             self.conncet()
-            self.sendData(path)
-            self.reciveResponse()
+            self.sendData(input_path)
+            self.reciveResponse(output_filename)
         else:
             print("そのパスは存在しません。")
-        
+            
+    def select_file(self):
+        path = input("input filename which you want to select")
+                
         
     def sendData(self, path):
         try:
@@ -72,10 +77,11 @@ class Client:
             print("キーボードが押されました。")
         
         
-    def savePayload(self, connection, filesize, mediaType):
+    def savePayload(self, connection, filesize, filename ,mediaType):
         totalRecived = 0        
-        print("mediaTYpe",mediaType)
-        with open(os.path.join("video/something." + mediaType), "wb") as f:
+        print("mediaType", mediaType)
+        output_path = "{}/{}.{}".format(self.dpath, filename, mediaType)
+        with open(output_path, "wb") as f:
             while filesize > 0:
                 try:
                     data = connection.recv(min(filesize, self.buffer))
@@ -89,7 +95,7 @@ class Client:
                     print("Error ", e)
             print("データの受信は終了しました。")
             
-    def reciveResponse(self):
+    def reciveResponse(self, filename):
         try:
             while True:
                 print("今からレスポンスを待ちます。")
@@ -103,9 +109,8 @@ class Client:
                 # body 受け取り
                 jsonData = self.sock.recv(jsonSize).decode()
                 mediaType = self.sock.recv(mediaTypeSize).decode()
-                # print(mediaType)
                 
-                self.savePayload(self.sock, payloadSize, mediaType)
+                self.savePayload(self.sock, payloadSize, filename, mediaType)
                 # if data:
                 #     print("Server response:", data)
                 # else:

@@ -20,11 +20,11 @@ class MMP:
     def changeResolution(input, output, width= None, height = None):
         print("HEIGHT: ",width, "HEIGHT", height)
         if (height == None or height == 0): 
-            command = ["ffmpeg","-i", input,  "-s", "scale=-1:{}".format(width),   "{}.{}".format(output, "mp4")]
+            command = ["ffmpeg","-i", input,  "-s", "scale=-1:{}".format(width),   output]
         elif (width == None or width == 0):
-            command = ["ffmpeg","-i", input,  "-s", "scale={}:-1".format(height),  "{}.{}".format(output, "mp4")]
+            command = ["ffmpeg","-i", input,  "-s", "scale={}:-1".format(height),  output]
         else:
-            command = ["ffmpeg","-i", input,  "-vf", "scale={}:{}".format(width, height),   "{}.{}".format(output, "mp4")]
+            command = ["ffmpeg","-i", input,  "-vf", "scale={}:{}".format(width, height), output]
         subprocess.call(command)
         return
     
@@ -34,7 +34,7 @@ class MMP:
         if (height == None or height <= 0 or width == None or width <= 0): 
             command = ["ffmpeg","-i", input,  "-vf", "setsar=-1:-1",  output]
         else:
-            command = ["ffmpeg","-i", input,  "-vf", "setsar={}:{}".format(width, height),   "{}.{}".format(output, "mp4")]
+            command = ["ffmpeg","-i", input,  "-vf", "setsar={}:{}".format(width, height),  output]
         subprocess.call(command)
         return
     
@@ -42,13 +42,13 @@ class MMP:
     def changeToMp3(input, output, quality):
         print("QUALITY : ",quality)
         quality_mp3 = "4"
-        if (quality == "hight"):
+        if (quality == "high"):
             quality_mp3 = "0"
         elif (quality == "normal"):
             quality_mp3 = "4"
         elif (quality == "low"):
             quality_mp3 = "9"
-        command = ["ffmpeg", "-i", input, "-vn", "-acodec", "libmp3lame", "-q:a" , quality_mp3, "{}.{}".format(output, "mp3")]
+        command = ["ffmpeg", "-i", input, "-vn", "-acodec", "libmp3lame", "-q:a" , quality_mp3, output]
         subprocess.call(command)
         return
     
@@ -57,9 +57,9 @@ class MMP:
         print("TYPE : ",type, "=>", input, "output:", output, "{}.{}".format(output,type))
         command = []
         if (type == "webm"):
-            command = ["ffmpeg", "-i", input, "-c:v", "libvpx", "-b:v", "1M" ,"-c:a", "libvorbis", "{}.{}".format(output, type)]
+            command = ["ffmpeg", "-i", input, "-c:v", "libvpx", "-b:v", "1M" ,"-c:a", "libvorbis", output]
         elif (type == "gif"):
-            command = ["ffmpeg", "-i" ,input, "-vf", "fps=10,scale=320:-1:flags=lanczos", "-c:v", "gif",  "{}.{}".format(output, type)]
+            command = ["ffmpeg", "-i" ,input, "-vf", "fps=10,scale=320:-1:flags=lanczos", "-c:v", "gif",  output]
         subprocess.call(command)
         print(command)
         return
