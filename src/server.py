@@ -9,7 +9,7 @@ class Server:
         self.port = int(port)
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.buffer = 4096
-        self.dpath = "./temp"
+        self.dpath = "../temp"
         self.HEADER_BYTES_SIZE = 64
         
     def start(self):
@@ -98,11 +98,6 @@ class Server:
         
                 print("method: ", method, "params: ", params,"ans:", ans)
                 
-                # 圧縮 compression
-                # 解像度　resolution
-                # アスペクト aspect
-                # 音声変更 mp3
-                # GIForWEBM gifwebm
                 input_path = os.path.join(self.dpath, "something.{}".format(mediaType))
                 output_path  = os.path.join(self.dpath, "temp.{}".format(ans))
 
@@ -129,7 +124,7 @@ class Server:
                 filename = os.path.basename(f.name)
                 print("filename: ",filename, "filetype: ",MMP.checkFileType(filename))
                 
-                with open("./json/request.json", "r") as f2:
+                with open("../json/request.json", "r") as f2:
                     json_data = f2.read()
                     print(json_data)
                     json_len = len(json_data)

@@ -13,7 +13,7 @@ class Client:
         self.port = int(port)
         self.buffer = 4096
         self.server_port = int(server_port)
-        self.dpath = "video"
+        self.dpath = "../video"
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
         
@@ -28,7 +28,7 @@ class Client:
             sys.exit(1)
             
     def start(self):
-        input_path = "./video/sample.mp4"
+        input_path = "../video/sample.mp4"
         output_filename = "sample"
         if os.path.exists(input_path):    
             self.conncet()
@@ -56,7 +56,7 @@ class Client:
                 if MMP.checkFileType(filename) == "mp4":
                     print("ファイル拡張子は mp4です")
                     # JSONファイルの読み込み
-                    with open("./json/request.json", "r") as f2:
+                    with open("../json/request.json", "r") as f2:
                         json_data = f2.read()
                         json_len = len(json_data)
                     print("data: ", json_data,"jsonlen" ,json_len)
@@ -129,6 +129,7 @@ class Client:
             self.sock.close()
               
     
+
 
 def main():
     client = Client("0.0.0.0", "0.0.0.0", 9050, 9001)

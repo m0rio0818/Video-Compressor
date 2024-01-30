@@ -20,7 +20,7 @@ class MMP:
     def changeResolution(input, output, width= None, height = None):
         print("HEIGHT: ",width, "HEIGHT", height)
         if (height == None or height == 0): 
-            command = ["ffmpeg","-i", input,  "-s", "scale=-1:{}".format(width),   output]
+            command = ["ffmpeg","-i", input,  "-s", "scale=-1:{}".format(width),   output, ]
         elif (width == None or width == 0):
             command = ["ffmpeg","-i", input,  "-s", "scale={}:-1".format(height),  output]
         else:
@@ -48,8 +48,9 @@ class MMP:
             quality_mp3 = "4"
         elif (quality == "low"):
             quality_mp3 = "9"
-        command = ["ffmpeg", "-i", input, "-vn", "-acodec", "libmp3lame", "-q:a" , quality_mp3, output]
+        command = ["ffmpeg", "-i", input, "-vn", "-acodec", "libmp3lame", "-q:a" , quality_mp3, output,]
         subprocess.call(command)
+        print("進行度")
         return
     
     # 指定した時間範囲で GIF や WEBM を作成
