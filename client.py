@@ -77,10 +77,18 @@ class Client:
             print("キーボードが押されました。")
         
         
-    def savePayload(self, connection, filesize, filename ,mediaType):
+    def savePayload(self, connection, filesize, filename, mediaType):
         totalRecived = 0        
         print("mediaType", mediaType)
         output_path = "{}/{}.{}".format(self.dpath, filename, mediaType)
+        # ファイルがすでに存在しているかチェック
+        count = 0
+        while os.path.exists(output_path):
+            print("ファイルはすでに存在しています。")
+            output_path = "{}/{}.{}".format(self.dpath, filename + str(count), mediaType)
+            print(output_path)
+            count+=1
+        
         with open(output_path, "wb") as f:
             while filesize > 0:
                 try:
