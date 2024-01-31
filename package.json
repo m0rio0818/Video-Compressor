@@ -5,7 +5,8 @@
   "main": "./dist/electron/main/main.js",
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tailwindcss build src/electron/renderer/styles.css -o dist/electron/renderer/styles.css"
   },
   "keywords": [],
   "author": "",
