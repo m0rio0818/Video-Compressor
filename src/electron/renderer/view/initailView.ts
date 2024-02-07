@@ -8,7 +8,7 @@ export class InitialView {
                     <label for="video_select" class="cursor-pointer text-center">Select MP4: </label>
                     <div id="selected_video"></div>
                     <input id="video_select" accept="mp4" type="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                    <div class="mx-auto  md:mr-0 w-10/12  md:w-1/3  bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white p-2 rounded-full text-center ">Choose Video</div>
+                    <div class="mx-auto w-10/12 sm:w-1/3  bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 text-white p-2 rounded-full text-center ">Choose Video</div>
                 </div>
                 <div class="bg-gray-300">
                     <label for="conversion" class="cursor-pointer text-center">変換方法: </label>
@@ -26,8 +26,8 @@ export class InitialView {
                 </div>
                 <div id="optionArea">
                 </div>
-                <div class="flex justify-center py-2"> 
-                    <button id="convert" class="w-10/12 sm:w-1/4 text-center bg-blue-500  hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 p-2 rounded-full text-white">変換</button>
+                <div class="flex justify-center pt-10"> 
+                    <button id="convert" class="w-10/12 sm:w-1/3 text-center bg-blue-500  hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 p-2 rounded-full text-white">変換</button>
                 </div>
             </div>
         </div>

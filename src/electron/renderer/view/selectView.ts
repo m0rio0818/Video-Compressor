@@ -7,7 +7,7 @@ export class selectView {
         }
     }
 
-    static clearCustomArea(){
+    static clearCustomArea() {
         let custom_area = document.getElementById("custom_input_area");
         custom_area!.innerHTML = "";
     }
@@ -52,8 +52,8 @@ export class selectView {
                     <option value="custom">カスタム</option>
                 </select>
             </div>
-            <div id="custom_input_area"></div>
         </div>
+        <div id="custom_input_area"  class="bg-blue-400"></div>
 
         `;
     }
@@ -61,21 +61,20 @@ export class selectView {
     static customInput() {
         let custom_area = document.getElementById("custom_input_area");
         let customInput = `
-        <div>
-            <div>
-                <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First name</label>
-                <input type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required>
+        <div class="flex flex-col sm:flex-row w-full p-3">
+            <div class="w-full sm:w-1/2 bg-pink-300 py-1 px-2 sm:pr-2">
+                <input type="text" id="width" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="W" required>
             </div>
-            <div>
-                <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last name</label>
-                <input type="text" id="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Doe" required>
+            <div class="flex items-center  justify-center h-full py-1 ">
+                <p class="text-2xl text-center"> × </p>
+            </div>
+            <div class="w-full sm:w-1/2 bg-orange-400 py-1 px-2  sm:pl-2">
+                <input type="number" id="height" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="H">
             </div>
         </div>
         `;
         custom_area!.innerHTML = customInput;
     }
-
-    
 
     static aspectView() {
         let option = document.getElementById("optionArea")!;
