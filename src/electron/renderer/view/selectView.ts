@@ -1,10 +1,15 @@
-export class selectView{
-     static clearArea() {
+export class selectView {
+    static clearArea() {
         let option = document.getElementById("optionArea")!;
         console.log(option);
-        if (option){
+        if (option) {
             option.innerHTML = ``;
         }
+    }
+
+    static clearCustomArea(){
+        let custom_area = document.getElementById("custom_input_area");
+        custom_area!.innerHTML = "";
     }
 
     static compressoinView() {
@@ -29,16 +34,48 @@ export class selectView{
             </label>
         </div>
         `;
-
-        console.log(option.innerHTML);
     }
 
     static resolutionView() {
         let option = document.getElementById("optionArea")!;
         option.innerHTML = `
+        <div class="max-w-md mx-auto p-8">
+            <label for="resolution" class="cursor-pointer text-center">解像度選択: </label>
+            <div class="relative inline-block mx-auto text-center">
+                <select id="resolution" class="px-4 py-2 focus:outline-none">
+                    <option disabled selected>選択してください</option>
+                    <option value="720p">720p</option>
+                    <option value="1080p">1080p</option>
+                    <option value="wqhd">WQHD</option>
+                    <option value="4k">4K</option>
+                    <option value="8k">8K</option>
+                    <option value="custom">カスタム</option>
+                </select>
+            </div>
+            <div id="custom_input_area"></div>
+        </div>
 
         `;
     }
+
+    static customInput() {
+        let custom_area = document.getElementById("custom_input_area");
+        let customInput = `
+        <div>
+            <div>
+                <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First name</label>
+                <input type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required>
+            </div>
+            <div>
+                <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last name</label>
+                <input type="text" id="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Doe" required>
+            </div>
+        </div>
+        `;
+        custom_area!.innerHTML = customInput;
+    }
+
+    
 
     static aspectView() {
         let option = document.getElementById("optionArea")!;

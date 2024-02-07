@@ -4,6 +4,10 @@ import { selectView } from "../view/selectView.js";
 export class Controller {
     static renderInitialPage() {
         InitialView.create();
+        Controller.selectMode();
+    }
+
+    static selectMode() {
         let filepath: string = "";
         let videoSelect = document.getElementById(
             "video_select"
@@ -23,6 +27,7 @@ export class Controller {
         let conversionSelect = document.getElementById(
             "conversion"
         ) as HTMLInputElement;
+
         conversionSelect.addEventListener("change", () => {
             let typeOfConvresion = conversionSelect.value;
             console.log(typeOfConvresion);
@@ -33,6 +38,7 @@ export class Controller {
             } else if (typeOfConvresion == "resolution") {
                 selectView.clearArea();
                 selectView.resolutionView();
+                Controller.changeResolution();
             } else if (typeOfConvresion == "aspect") {
                 selectView.clearArea();
                 selectView.aspectView();
@@ -54,5 +60,15 @@ export class Controller {
         ) as HTMLInputElement;
 
         convertButton.addEventListener("click", () => {});
+    }
+
+    static changeResolution() {
+        const resolutionLevel = document.getElementById("resolution");
+        resolutionLevel!.addEventListener("change", () => {
+            selectView.clearCustomArea();
+            if (resolutionLevel!.value == "custom") {
+                selectView.customInput();
+            }
+        });
     }
 }
