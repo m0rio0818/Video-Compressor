@@ -35,6 +35,7 @@ export class Controller {
             if (typeOfConvresion == "compression") {
                 selectView.clearArea();
                 selectView.compressoinView();
+                Controller.changeQuality();
             } else if (typeOfConvresion == "resolution") {
                 selectView.clearArea();
                 selectView.resolutionView();
@@ -44,7 +45,7 @@ export class Controller {
                 selectView.aspectView();
             } else if (typeOfConvresion == "mp3") {
                 selectView.clearArea();
-                selectView.mp3View();
+                // selectView.mp3View();
             } else if (typeOfConvresion == "gif") {
                 selectView.clearArea();
                 selectView.gifView();
@@ -52,6 +53,7 @@ export class Controller {
                 selectView.clearArea();
                 selectView.webmView();
             } else {
+                selectView.clearArea();
             }
         });
 
@@ -60,6 +62,17 @@ export class Controller {
         ) as HTMLInputElement;
 
         convertButton.addEventListener("click", () => {});
+    }
+
+    static changeQuality() {
+        const radioButtons = document.querySelectorAll('input[type="radio"]');
+        radioButtons.forEach(button => {
+            console.log(button);
+            button.addEventListener("change", () => {
+                const selectedValue = document.querySelector('input[name="radioOption"]:checked')
+                console.log(selectedValue.value);
+            })
+        })
     }
 
     static changeResolution() {

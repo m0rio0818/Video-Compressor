@@ -16,21 +16,20 @@ export class selectView {
         let option = document.getElementById("optionArea")!;
         option.innerHTML = `
         <div class="max-w-md mx-auto p-8">
-            <h2 class="text-2xl font-bold mb-4 text-center">圧縮レベル</h2>
-        
+            <h2 class="text-2xl  mb-4 text-center">Quality</h2>
             <label class="flex items-center space-x-2">
-              <input type="radio" name="radioOption" class="text-sky-500 form-radio focus:ring-sky-500 h-4 w-4">
-              <span class="text-gray-800">High</span>
+                <input type="radio" value="high" name="radioOption" class="text-sky-500 form-radio focus:ring-sky-500 h-4 w-4">
+                <span class="text-gray-800">High</span>
             </label>
         
             <label class="flex items-center space-x-2">
-              <input type="radio" name="radioOption" class="text-sky-500 form-radio focus:ring-sky-500 h-4 w-4">
-              <span class="text-gray-800">Normal</span>
+                <input type="radio" value="normal" name="radioOption" class="text-sky-500 form-radio focus:ring-sky-500 h-4 w-4">
+                <span class="text-gray-800">Normal</span>
             </label>
         
             <label class="flex items-center space-x-2">
-              <input type="radio" name="radioOption" class="text-sky-500 form-radio focus:ring-sky-500 h-4 w-4">
-              <span class="text-gray-800">Low</span>
+                <input type="radio" value="low" name="radioOption" class="text-sky-500 form-radio focus:ring-sky-500 h-4 w-4">
+                <span class="text-gray-800">Low</span>
             </label>
         </div>
         `;
@@ -79,7 +78,17 @@ export class selectView {
     static aspectView() {
         let option = document.getElementById("optionArea")!;
         option.innerHTML = `
-
+        <div class="flex flex-col sm:flex-row w-full p-3">
+            <div class="w-full sm:w-1/2 bg-pink-300 py-1 px-2 sm:pr-2">
+                <input type="text" id="width" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="W" required>
+            </div>
+            <div class="flex items-center  justify-center h-full py-1 ">
+                <p class="text-2xl text-center"> : </p>
+            </div>
+            <div class="w-full sm:w-1/2 bg-orange-400 py-1 px-2  sm:pl-2">
+                <input type="number" id="height" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="H">
+            </div>
+        </div>
     `;
     }
 
