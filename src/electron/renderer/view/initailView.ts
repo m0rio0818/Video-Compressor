@@ -14,7 +14,7 @@ export class InitialView {
                     <label for="conversion" class="cursor-pointer text-center">変換方法: </label>
                     <div class="relative inline-block mx-auto text-left">
                         <select id="conversion" class="px-4 py-2 focus:outline-none">
-                            <option disabled selected>選択してください</option>
+                            <option disabled selected value="">選択してください</option>
                             <option value="compression">圧縮</option>
                             <option value="resolution">解像度変更</option>
                             <option value="aspect">アスペクト変更</option>

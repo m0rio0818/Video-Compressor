@@ -30,7 +30,6 @@ export class Controller {
 
         conversionSelect.addEventListener("change", () => {
             let typeOfConvresion = conversionSelect.value;
-            console.log(typeOfConvresion);
 
             if (typeOfConvresion == "compression") {
                 selectView.clearArea();
@@ -58,21 +57,33 @@ export class Controller {
         });
 
         let convertButton = document.getElementById(
-            "conversion"
+            "convert"
         ) as HTMLInputElement;
 
-        convertButton.addEventListener("click", () => {});
+        convertButton.addEventListener("click", () => {
+            if (!videoSelect.value) {
+                window.alert("ビデオが選択されてません");
+            } 
+            else if (!conversionSelect.value) {
+                window.alert("変換方法が指定されていません");
+            }
+            else {
+
+            }
+        });
     }
 
     static changeQuality() {
         const radioButtons = document.querySelectorAll('input[type="radio"]');
-        radioButtons.forEach(button => {
+        radioButtons.forEach((button) => {
             console.log(button);
             button.addEventListener("change", () => {
-                const selectedValue = document.querySelector('input[name="radioOption"]:checked')
+                const selectedValue = document.querySelector(
+                    'input[name="radioOption"]:checked'
+                );
                 console.log(selectedValue.value);
-            })
-        })
+            });
+        });
     }
 
     static changeResolution() {
