@@ -31,6 +31,7 @@ class Client:
         input_path = "../video/sample.mp4"
         output_filename = "sample"
         if os.path.exists(input_path):    
+            print("starting...")
             self.conncet()
             self.sendData(input_path)
             self.reciveResponse(output_filename)
@@ -43,6 +44,7 @@ class Client:
         
     def sendData(self, path):
         try:
+            print(path)
             with open(path, "rb") as f:
                 f.seek(0, os.SEEK_END)
                 filesize = f.tell()

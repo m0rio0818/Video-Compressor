@@ -25,8 +25,8 @@ class Client {
 
     connect(): void {
         this.socket = net.createConnection({
-            host: this.address,
-            port: this.port,
+            host: this.server_address,
+            port: this.server_port,
         });
 
         this.socket.on("data", (data) => {
@@ -57,3 +57,5 @@ class Client {
 }
 
 const client = new Client("0.0.0.0", "0.0.0.0", 9050, 9001);
+client.connect()
+client.send("HELLO WORLD")
