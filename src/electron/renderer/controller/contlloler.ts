@@ -1,5 +1,7 @@
 import { InitialView } from "../view/initailView.js";
 import { selectView } from "../view/selectView.js";
+// import * as pythonShell from "python-shell";
+const { PythonShell } = require("python-shell");
 
 export class Controller {
     static renderInitialPage() {
@@ -63,12 +65,10 @@ export class Controller {
         convertButton.addEventListener("click", () => {
             if (!videoSelect.value) {
                 window.alert("ビデオが選択されてません");
-            } 
-            else if (!conversionSelect.value) {
+            } else if (!conversionSelect.value) {
                 window.alert("変換方法が指定されていません");
-            }
-            else {
-
+            } else {
+                Controller.convertVideo();
             }
         });
     }
@@ -94,5 +94,15 @@ export class Controller {
                 selectView.customInput();
             }
         });
+    }
+
+    static convertVideo() {
+        pythonShell.PythonShell.run("../../../client.py")
+            .then((result) => {
+                console.log("pythonの結果", result);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 }
