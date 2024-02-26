@@ -1,5 +1,5 @@
 {
-  "type": "module",
+  "type": "commonjs",
   "name": "video-compressor",
   "version": "1.0.0",
   "description": "",
@@ -15,5 +15,8 @@
   "devDependencies": {
     "electron": "^23.3.13",
     "tailwindcss": "^3.4.1"
+  },
+  "dependencies": {
+    "python-shell": "^5.0.0"
   }
 }

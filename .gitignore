@@ -1,6 +1,7 @@
 /temp/
 /video/
 __pycache__
+/src/client.ts
 
 # Logs
 logs
