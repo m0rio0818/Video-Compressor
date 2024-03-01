@@ -13,7 +13,7 @@ class Client:
         self.port = int(port)
         self.buffer = 4096
         self.server_port = int(server_port)
-        self.dpath = "../video"
+        self.dpath = "../converted"
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
         
@@ -27,14 +27,24 @@ class Client:
             print("err", err)
             sys.exit(1)
             
+            
     def start(self):
-        input_path = "../video/sample.mp4"
-        output_filename = "sample"
-        if os.path.exists(input_path):    
+        input_video_path = ""
+        with open("../json/request.json", "r") as f:
+            json_data = json.loads(f.read())
+            input_video_path = json_data["filepath"]
+            
+
+        output_filename = os.path.basename(input_video_path)
+        output_filename = output_filename[:output_filename.find(".")] + "_converted"
+        print(output_filename)
+                    
+        if os.path.exists(input_video_path):    
             print("starting...")
-            self.conncet()
-            self.sendData(input_path)
-            self.reciveResponse(output_filename)
+            # self.conncet()
+            # self.sendData(input_video_path)
+            # self.reciveResponse(output_filename)
+            
         else:
             print("そのパスは存在しません。")
                             
@@ -58,7 +68,7 @@ class Client:
                     with open("../json/request.json", "r") as f2:
                         json_data = f2.read()
                         json_len = len(json_data)
-                    print("data: ", json_data,"jsonlen" ,json_len)
+                    print("data: ", json_data,"jsonlen", json_len)
                     
                     header = MMP.makeHeader(json_len, len(MMP.checkFileType(filename)), filesize)
                     # ヘッダーの送信
@@ -69,7 +79,7 @@ class Client:
                     self.sock.sendall(body)
                     print("ボディの送信まで完了しました。")
                 else:
-                    print("その拡張子のファイルは送信できません。")
+                    print("MPのファイルは送信できません。")
             
     
         except KeyboardInterrupt :
@@ -80,13 +90,17 @@ class Client:
         totalRecived = 0        
         print("mediaType", mediaType)
         output_path = "{}/{}.{}".format(self.dpath, filename, mediaType)
+        
+        if not os.path.exists(self.dpath):
+            os.makedirs(self.dpath)
+        
         # ファイルがすでに存在しているかチェック
         count = 0
         while os.path.exists(output_path):
             print("ファイルはすでに存在しています。")
             output_path = "{}/{}.{}".format(self.dpath, filename + str(count), mediaType)
             print(output_path)
-            count+=1
+            count += 1
         
         with open(output_path, "wb") as f:
             while filesize > 0:

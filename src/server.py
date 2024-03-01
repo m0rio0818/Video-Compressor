@@ -21,13 +21,13 @@ class Server:
         self.sock.bind((self.address, self.port))
         self.sock.listen(1)
         
-    def savePayload(self, connection, filesize, mediaType):
+    def savePayload(self, connection, filesize, input_path):
         totalRecived = 0
         fSize = filesize
         if not os.path.exists(self.dpath):
             os.makedirs(self.dpath)
                     
-        with open(os.path.join(self.dpath, "something." + mediaType), "wb") as f:
+        with open(input_path, "wb") as f:
             while filesize > 0:
                 try:
                     data = connection.recv(min(filesize, self.buffer))
@@ -41,16 +41,16 @@ class Server:
                     print("Error ", e)
             print("データの受信は終了しました。")
             
-    def covert_MP4_Video(self, connection, input_path, output_path, method, params):
+    def covert_MP4_Video(self, connection, input_path, output_path, method, custom, params=None):
         # 圧縮 compression
         # 解像度　resolution
         # アスペクト aspect
         # 音声変更 mp3
         # GIForWEBM gifwebm
         if method == "compression":
-            MMP.compressionData(input_path, output_path)
+            MMP.compressionData(input_path, output_path, custom)
             self.loadAndSend(connection, output_path)
-            self.deleteVideo(output_path)   
+            # self.deleteVideo(output_path)   
         elif method == "resolution":
             MMP.changeResolution(input_path, output_path, 0, params[1])
             self.loadAndSend(connection, output_path)
@@ -87,20 +87,24 @@ class Server:
                 # body 受け取り
                 jsonData = connection.recv(jsonSize).decode()
                 mediaType = connection.recv(mediaTypeSize).decode()
-                self.savePayload(connection, payloadSize, mediaType)
-
-                print("ファイルは一旦サーバーに保存されました。")
                 jsonReqeuest = json.loads(jsonData)
                
+                filepath = jsonReqeuest["filepath"]
                 method = jsonReqeuest["method"]
+                custom = jsonReqeuest["custom"]
                 params = jsonReqeuest["params"]
-                ans = jsonReqeuest["ans"]
+                res_type = jsonReqeuest["res_type"]
         
-                print("method: ", method, "params: ", params,"ans:", ans)
+                print("method: ", method, "params: ", params,"custom:", custom, "res_type", res_type)
                 
-                input_path = os.path.join(self.dpath, "something.{}".format(mediaType))
-                output_path  = os.path.join(self.dpath, "temp.{}".format(ans))
-
+                input_path = os.path.join(self.dpath, "recived.{}".format(mediaType))
+                output_path  = os.path.join(self.dpath, "response.{}".format(res_type))
+                print("input: ",input_path, "output_path: ",output_path)
+                
+                
+                self.savePayload(connection, payloadSize, input_path)
+                print("ファイルは一旦サーバーに保存されました。")
+                
                 self.covert_MP4_Video(connection, input_path, output_path, method, params)
             
             except OSError as e:
@@ -122,7 +126,7 @@ class Server:
                     raise Exception("file must be below 4GB")
             
                 filename = os.path.basename(f.name)
-                print("filename: ",filename, "filetype: ",MMP.checkFileType(filename))
+                print("filename: ", filename, "filetype: ", MMP.checkFileType(filename))
                 
                 with open("../json/request.json", "r") as f2:
                     json_data = f2.read()

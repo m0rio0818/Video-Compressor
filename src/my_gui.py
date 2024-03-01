@@ -4,7 +4,7 @@ from tkinter import filedialog
 from tkinter import messagebox
 import os
 from client import Client
-from make_json import makeJsonFile
+from make_json import makeRequest_JsonFile
 
 class ViewContlloer:
     resolution_combobox = None
@@ -40,7 +40,7 @@ class ViewContlloer:
         self.height = self.root.winfo_height()
         self.frame = tk.Frame(self.root, height=100, width=self.width)
         self.frame.place(x=0, y=140)
-        self.client = Client
+        self.client = Client("0.0.0.0", "0.0.0.0", 9050, 9001)
 
     def getMp4File(self, event):
         ViewContlloer.filePath = filedialog.askopenfilename(title="mp4ファイルを選択", filetypes=[("MP4 files", "*.mp4")] , initialdir=os.getcwd())
@@ -101,8 +101,8 @@ class ViewContlloer:
                     return
                 else:
                     print("圧縮で決定: ", ViewContlloer.selected_radio)
-                    makeJsonFile(ViewContlloer.filePath, method, ViewContlloer.selected_radio) 
-                    
+                    makeRequest_JsonFile(ViewContlloer.filePath, method, ViewContlloer.selected_radio, "mp4")
+                    self.client.start()                    
                     
             elif ViewContlloer.convertionMethod == "解像度変更":
                 if ViewContlloer.selected_item == None:
@@ -116,11 +116,12 @@ class ViewContlloer:
                         return
                     else:
                         print(width, " * " , height)
-                        makeJsonFile(ViewContlloer.filePath, method, ViewContlloer.selected_item, [width, height]) 
-                    
+                        makeRequest_JsonFile(ViewContlloer.filePath, method, ViewContlloer.selected_item, "mp4", [width, height]) 
+                        self.client.start()        
                 else:
                     print("解像度選択で決定", ViewContlloer.selected_item)
-                    makeJsonFile(ViewContlloer.filePath, method, ViewContlloer.selected_item,) 
+                    makeRequest_JsonFile(ViewContlloer.filePath, method, ViewContlloer.selected_item, "mp4") 
+                    self.client.start()        
                     
             elif ViewContlloer.convertionMethod == "アスペクト比変更":
                 width = ViewContlloer.entryW.get()
@@ -130,10 +131,11 @@ class ViewContlloer:
                     return
                 else:
                     print("アスペクト比変更で決定", width, " * " , height)
-                    makeJsonFile(ViewContlloer.filePath, method, None, [width, height]) 
+                    makeRequest_JsonFile(ViewContlloer.filePath, method, None, "mp4", [width, height])
+                    self.client.start()        
                     
             elif ViewContlloer.convertionMethod == "MP3変換":
-                makeJsonFile(ViewContlloer.filePath, method, None, None) 
+                makeRequest_JsonFile(ViewContlloer.filePath, method, None, "mp3", None) 
                 print("MP3変換で決定")
             elif ViewContlloer.convertionMethod == "GIF作成":
                 print("GIF作成で決定")
