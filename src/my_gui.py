@@ -4,19 +4,30 @@ from tkinter import filedialog
 from tkinter import messagebox
 import os
 from client import Client
+from make_json import makeJsonFile
 
 class ViewContlloer:
     resolution_combobox = None
     combobox = None
     
-    fileName = None
+    filePath = None
     convertionMethod = None
-    selected_radio = None
     selected_item = None
+    
+    selected_radio = None
     entryW = None
     entryH = None
 
     file_label = None
+    
+    method_Converter = {
+        "圧縮": "compression",
+        "解像度変更" : "resolution",
+        "アスペクト比変更" : "aspect",
+        "MP3変換": "mp3",
+        "GIF作成" : "gif",
+        "WEBM作成": "webm"
+    }
     
     
     def __init__(self):
@@ -32,24 +43,19 @@ class ViewContlloer:
         self.client = Client
 
     def getMp4File(self, event):
-        ViewContlloer.fileName = filedialog.askopenfilename(title="mp4ファイルを選択", filetypes=[("MP4 files", "*.mp4")] , initialdir=os.getcwd())
-        if ViewContlloer.fileName != "":
+        ViewContlloer.filePath = filedialog.askopenfilename(title="mp4ファイルを選択", filetypes=[("MP4 files", "*.mp4")] , initialdir=os.getcwd())
+        if ViewContlloer.filePath != "":
             if hasattr(ViewContlloer, "file_label") and ViewContlloer.file_label is not None:
                 ViewContlloer.file_label.destroy()
-            ViewContlloer.file_label = tk.Label(self.root, text=ViewContlloer.fileName, font=("", 15))
+            ViewContlloer.file_label = tk.Label(self.root, text=ViewContlloer.filePath, font=("", 15))
             ViewContlloer.file_label.place(x=self.width//4, y = 45)        
-        print("選択されたファイル: ", ViewContlloer.fileName)
+        print("選択されたファイル: ", ViewContlloer.filePath)
         
-    def on_text_input(self, event, entry, type):
-        # if (type == "W"):
-        text_content =  entry.get("1.0", "end-1c")
-        print(text_content)
 
     def makeCustomInput(self):
         validate_numeric = self.frame.register(self.only_numbers)
         ViewContlloer.entryW = tk.Entry(self.frame, validate="key", validatecommand=(validate_numeric, '%S'), width=10)
         ViewContlloer.entryW.place(x=self.width//2-150, y=40)
-        # entryW.bind("<KeyRelease>", lambda entryW, : self.on_text_input(entryW,))
         
         x_label = tk.Label(self.frame, text="x", font=("", 15))
         x_label.place(x=self.width//2, y=40)
@@ -66,8 +72,8 @@ class ViewContlloer:
             print("解像度は以下に変更します", ViewContlloer.selected_item)
             
     def on_combobox_selected(self, event):
-        print("選択されたファイル:" , ViewContlloer.fileName)
-        if ViewContlloer.fileName == None:
+        print("選択されたファイル:" , ViewContlloer.filePath)
+        if ViewContlloer.filePath == None:
             messagebox.showinfo("mp4ファイル選択", "MP4ファイルを選択してください")
             ViewContlloer.combobox.set("変換方法を選択してください")
             return
@@ -76,24 +82,27 @@ class ViewContlloer:
         self.clearAllElement()
         self.makeFrameArea(selected_item)
         ViewContlloer.convertionMethod = selected_item
-        print(ViewContlloer.convertionMethod,"が選択されました。")
+        print(ViewContlloer.convertionMethod, "が選択されました。")
         
             
     def convertVideo(self, event):
-        if ViewContlloer.fileName == None:
+        if ViewContlloer.filePath == None:
             messagebox.showinfo("mp4ファイル選択", "MP4ファイルを選択してください")
         elif ViewContlloer.convertionMethod == None:
             messagebox.showinfo("変換方法選択", "変換方法を選択してください")
         else:
+            method = ViewContlloer.method_Converter[ViewContlloer.convertionMethod]
             # 変換方法確認
-            print("最終変換方法=> ",ViewContlloer.convertionMethod)
+            print("最終変換方法=> ",ViewContlloer.convertionMethod, " : ", method)
             if ViewContlloer.convertionMethod == "圧縮":
                 print(ViewContlloer.selected_radio)
                 if ViewContlloer.selected_radio == None:
                     messagebox.showinfo("圧縮方法選択", "圧縮方法が選択されていません")
                     return
                 else:
-                    print("圧縮で決定", ViewContlloer.selected_radio)
+                    print("圧縮で決定: ", ViewContlloer.selected_radio)
+                    makeJsonFile(ViewContlloer.filePath, method, ViewContlloer.selected_radio) 
+                    
                     
             elif ViewContlloer.convertionMethod == "解像度変更":
                 if ViewContlloer.selected_item == None:
@@ -107,8 +116,11 @@ class ViewContlloer:
                         return
                     else:
                         print(width, " * " , height)
+                        makeJsonFile(ViewContlloer.filePath, method, ViewContlloer.selected_item, [width, height]) 
+                    
                 else:
                     print("解像度選択で決定", ViewContlloer.selected_item)
+                    makeJsonFile(ViewContlloer.filePath, method, ViewContlloer.selected_item,) 
                     
             elif ViewContlloer.convertionMethod == "アスペクト比変更":
                 width = ViewContlloer.entryW.get()
@@ -118,8 +130,10 @@ class ViewContlloer:
                     return
                 else:
                     print("アスペクト比変更で決定", width, " * " , height)
+                    makeJsonFile(ViewContlloer.filePath, method, None, [width, height]) 
                     
             elif ViewContlloer.convertionMethod == "MP3変換":
+                makeJsonFile(ViewContlloer.filePath, method, None, None) 
                 print("MP3変換で決定")
             elif ViewContlloer.convertionMethod == "GIF作成":
                 print("GIF作成で決定")

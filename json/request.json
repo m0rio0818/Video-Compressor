@@ -1,6 +1,1 @@
-{
-    "method": "mp3", 
-    "params": ["high"], 
-    "ans" : "mp3",
-    "id": 1
-}
+{"filepath": "/Users/morionakatani/Desktop/sample.mp4", "method": "mp3", "custom": null, "params": null}

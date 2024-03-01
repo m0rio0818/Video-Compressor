@@ -37,10 +37,7 @@ class Client:
             self.reciveResponse(output_filename)
         else:
             print("そのパスは存在しません。")
-            
-    def select_file(self):
-        path = input("input filename which you want to select")
-                
+                            
         
     def sendData(self, path):
         try:
