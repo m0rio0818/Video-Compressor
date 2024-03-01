@@ -3,16 +3,20 @@ import tkinter.ttk as ttk
 from tkinter import filedialog
 from tkinter import messagebox
 import os
+from client import Client
 
 class ViewContlloer:
     resolution_combobox = None
-    optionArea = None
     combobox = None
+    
     fileName = None
-    file_label = None
+    convertionMethod = None
+    selected_radio = None
+    selected_item = None
     entryW = None
-    x_label = None
     entryH = None
+
+    file_label = None
     
     
     def __init__(self):
@@ -23,8 +27,9 @@ class ViewContlloer:
         self.root.update_idletasks()
         self.width = self.root.winfo_width()
         self.height = self.root.winfo_height()
-        self.frame = tk.Frame(self.root, height=100, width=self.width, bg="blue")
+        self.frame = tk.Frame(self.root, height=100, width=self.width)
         self.frame.place(x=0, y=140)
+        self.client = Client
 
     def getMp4File(self, event):
         ViewContlloer.fileName = filedialog.askopenfilename(title="mp4ファイルを選択", filetypes=[("MP4 files", "*.mp4")] , initialdir=os.getcwd())
@@ -33,35 +38,32 @@ class ViewContlloer:
                 ViewContlloer.file_label.destroy()
             ViewContlloer.file_label = tk.Label(self.root, text=ViewContlloer.fileName, font=("", 15))
             ViewContlloer.file_label.place(x=self.width//4, y = 45)        
-        print("選択されたファイル: ",ViewContlloer.fileName)
-
-
-    def only_numbers(self, char):
-        return char.isdigit() and (len(char) <= 4 and len(char) > 0)
-    
-    def destroyCustomInput(self):
-        ViewContlloer.entryH.destroy()
-        ViewContlloer.entryW.destroy()
-        ViewContlloer.x_label.destroy()
+        print("選択されたファイル: ", ViewContlloer.fileName)
         
+    def on_text_input(self, event, entry, type):
+        # if (type == "W"):
+        text_content =  entry.get("1.0", "end-1c")
+        print(text_content)
 
     def makeCustomInput(self):
-        validate_numeeric = self.root.register(self.only_numbers)
-        ViewContlloer.entryW = tk.Entry(self.frame, validate="key", validatecommand=(validate_numeeric, '%S'), width=10)
+        validate_numeric = self.frame.register(self.only_numbers)
+        ViewContlloer.entryW = tk.Entry(self.frame, validate="key", validatecommand=(validate_numeric, '%S'), width=10)
         ViewContlloer.entryW.place(x=self.width//2-150, y=40)
-        ViewContlloer.x_label = tk.Label(self.frame, text="x", font=("", 15))
-        ViewContlloer.x_label.place(x=self.width//2, y=40)
-        ViewContlloer.entryH = tk.Entry(self.frame, validate="key", validatecommand=(validate_numeeric, '%S'), width=10)
+        # entryW.bind("<KeyRelease>", lambda entryW, : self.on_text_input(entryW,))
+        
+        x_label = tk.Label(self.frame, text="x", font=("", 15))
+        x_label.place(x=self.width//2, y=40)
+        
+        ViewContlloer.entryH = tk.Entry(self.frame, validate="key", validatecommand=(validate_numeric, '%S'), width=10)
         ViewContlloer.entryH.place(x=self.width//2+50, y=40)
         
     def on_resolution_change(self, event):
-        selected_item = ViewContlloer.resolution_combobox.get()
-        if selected_item == "custom":
+        ViewContlloer.selected_item = ViewContlloer.resolution_combobox.get()
+        if ViewContlloer.selected_item == "custom":
             print("カスタム入力")
             self.makeCustomInput()
         else:
-            print("解像度は以下に変更します", selected_item)
-            self.destroyCustomInput()
+            print("解像度は以下に変更します", ViewContlloer.selected_item)
             
     def on_combobox_selected(self, event):
         print("選択されたファイル:" , ViewContlloer.fileName)
@@ -71,26 +73,89 @@ class ViewContlloer:
             return
 
         selected_item = ViewContlloer.combobox.get()
-        print(selected_item,"が選択されました。")
         self.clearAllElement()
         self.makeFrameArea(selected_item)
+        ViewContlloer.convertionMethod = selected_item
+        print(ViewContlloer.convertionMethod,"が選択されました。")
         
             
     def convertVideo(self, event):
-        print("変換ボタンが押されました")
+        if ViewContlloer.fileName == None:
+            messagebox.showinfo("mp4ファイル選択", "MP4ファイルを選択してください")
+        elif ViewContlloer.convertionMethod == None:
+            messagebox.showinfo("変換方法選択", "変換方法を選択してください")
+        else:
+            # 変換方法確認
+            print("最終変換方法=> ",ViewContlloer.convertionMethod)
+            if ViewContlloer.convertionMethod == "圧縮":
+                print(ViewContlloer.selected_radio)
+                if ViewContlloer.selected_radio == None:
+                    messagebox.showinfo("圧縮方法選択", "圧縮方法が選択されていません")
+                    return
+                else:
+                    print("圧縮で決定", ViewContlloer.selected_radio)
+                    
+            elif ViewContlloer.convertionMethod == "解像度変更":
+                if ViewContlloer.selected_item == None:
+                    messagebox.showinfo("解像度選択", "解像度が選択されていません")
+                elif ViewContlloer.selected_item == "custom":
+                    print(ViewContlloer.entryH, ViewContlloer.entryW)
+                    width = ViewContlloer.entryW.get()
+                    height = ViewContlloer.entryH.get()                    
+                    if width == "" or height == "":
+                        messagebox.showinfo("カスタム入力不適切", "カスタム入力が正しくされていません")
+                        return
+                    else:
+                        print(width, " * " , height)
+                else:
+                    print("解像度選択で決定", ViewContlloer.selected_item)
+                    
+            elif ViewContlloer.convertionMethod == "アスペクト比変更":
+                width = ViewContlloer.entryW.get()
+                height = ViewContlloer.entryH.get()                    
+                if width == "" or height == "":
+                    messagebox.showinfo("カスタム入力不適切", "カスタム入力が正しくされていません")
+                    return
+                else:
+                    print("アスペクト比変更で決定", width, " * " , height)
+                    
+            elif ViewContlloer.convertionMethod == "MP3変換":
+                print("MP3変換で決定")
+            elif ViewContlloer.convertionMethod == "GIF作成":
+                print("GIF作成で決定")
+            elif ViewContlloer.convertionMethod == "WEBM作成":
+                print("WEBM作成で決定")
     
     def clearAllElement(self):
         self.frame.destroy()
         self.frame = tk.Frame(self.root, height=100, width=self.width,)
-        self.frame.place(x=0, y=140)    
+        self.frame.place(x=0, y=140)
+        ViewContlloer.convertionMethod = None
+        ViewContlloer.selected_radio = None
+        ViewContlloer.entryW = None
+        ViewContlloer.entryH = None
+        
+    def only_numbers(self, char):
+        return char.isdigit() and (len(char) <= 4 and len(char) > 0)
     
+    # def destroyCustomInput(self):
+    #     ViewContlloer.entryH.destroy()
+    #     ViewContlloer.entryW.destroy()
+    #     ViewContlloer.x_label.destroy()
+
+    def on_radio_selected(self, radio_var):
+        ViewContlloer.selected_radio = radio_var.get()
+        print("選択されたラジオ値: ", ViewContlloer.selected_radio)
+        return
+
     def makeFrameArea(self, type):
         if type == "圧縮":
             radio_label = ["high", "normal", "low"]
-            radio_var = tk.IntVar()
+            radio_var = tk.StringVar(value=None)
             for i in range(len(radio_label)):
-                radio = tk.Radiobutton(self.frame, value=i, variable= radio_var, text=radio_label[i])
+                radio = tk.Radiobutton(self.frame, value=radio_label[i], variable=radio_var, text=radio_label[i], command=lambda: self.on_radio_selected(radio_var))
                 radio.place(x = self.width/2, y = i * 20)
+        
             print("圧縮だな〜")
             
         elif type == "解像度変更":
