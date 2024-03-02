@@ -41,9 +41,9 @@ class Client:
                     
         if os.path.exists(input_video_path):    
             print("starting...")
-            # self.conncet()
-            # self.sendData(input_video_path)
-            # self.reciveResponse(output_filename)
+            self.conncet()
+            self.sendData(input_video_path)
+            self.reciveResponse(output_filename)
             
         else:
             print("そのパスは存在しません。")

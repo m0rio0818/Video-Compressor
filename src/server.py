@@ -50,9 +50,9 @@ class Server:
         if method == "compression":
             MMP.compressionData(input_path, output_path, custom)
             self.loadAndSend(connection, output_path)
-            # self.deleteVideo(output_path)   
+            self.deleteVideo(output_path)   
         elif method == "resolution":
-            MMP.changeResolution(input_path, output_path, 0, params[1])
+            MMP.changeResolution(input_path, output_path, custom, params)
             self.loadAndSend(connection, output_path)
             self.deleteVideo(output_path)   
         elif method == "aspect":

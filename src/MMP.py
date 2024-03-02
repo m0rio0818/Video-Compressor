@@ -29,16 +29,32 @@ class MMP:
         return 
     
     # 動画の解像度を変更する
-    def changeResolution(input, output, width= None, height = None):
-        print("HEIGHT: ",width, "HEIGHT", height)
-        if (height == None or height == 0): 
-            command = ["ffmpeg","-i", input,  "-s", "scale=-1:{}".format(width),   output, ]
-        elif (width == None or width == 0):
-            command = ["ffmpeg","-i", input,  "-s", "scale={}:-1".format(height),  output]
+    def changeResolution(input, output, option,  params):
+        print(option, params)
+        if option == "custom":
+            width = params[0]
+            height = params[1]
+            print("Width: ",width, "Height: ", height)
+            if (height == None or height == 0): 
+                command = ["ffmpeg","-i", input,  "-s", "scale=-1:{}".format(width),   output, ]
+            elif (width == None or width == 0):
+                command = ["ffmpeg","-i", input,  "-s", "scale={}:-1".format(height),  output]
+            else:
+                command = ["ffmpeg","-i", input,  "-vf", "scale={}:{}".format(width, height), output]
+            subprocess.call(command)
         else:
-            command = ["ffmpeg","-i", input,  "-vf", "scale={}:{}".format(width, height), output]
-        subprocess.call(command)
-        return
+            if (option == "360p"):
+                print("360p")
+            elif (option == "720p"):
+                print("720p")
+            elif (option == "1080p"):
+                print("1080p")
+            elif (option == "WQHD"):
+                print("WQHD")
+            elif (option == "4K"):
+                print("4K")
+            else:
+                return
     
     # 動画のアスペクト比を変更
     def changeAspect(input, output, width, height):
