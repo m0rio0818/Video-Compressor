@@ -2,6 +2,7 @@ import socket
 import os
 import json
 from MMP import MMP
+import asyncio
 
 class Server:
     def __init__(self, address, port) -> None:
@@ -115,35 +116,32 @@ class Server:
                 
                 
     def loadAndSend(self, connection, path):
-        try:
-            with open (path, "rb") as f:
-                f.seek(0, os.SEEK_END)
-                filesize = f.tell()
-                f.seek(0, 0)
-                
-                if filesize > pow(2, 32):
-                    raise Exception("file must be below 4GB")
+        with open (path, "rb") as f:
+            f.seek(0, os.SEEK_END)
+            filesize = f.tell()
+            f.seek(0, 0)
             
-                filename = os.path.basename(f.name)
-                print("filename: ", filename, "filetype: ", MMP.checkFileType(filename))
-                
-                with open("../json/request.json", "r") as f2:
-                    json_data = f2.read()
-                    print(json_data)
-                    json_len = len(json_data)
-                
-                header = MMP.makeHeader(json_len, len(MMP.checkFileType(filename)), filesize)
-                print("Response Header: ", header, len(header))
-                # ヘッダーの送信
-                connection.sendall(header)
-                print("ResponseFILENAME: ",filename)
-                
-                # bodyの送信
-                converted_data = json_data.encode("utf-8") + MMP.checkFileType(filename).encode("utf-8") + f.read()
-                connection.sendall(converted_data)
-                
-        finally:
-            print("a")
+            if filesize > pow(2, 32):
+                raise Exception("file must be below 4GB")
+        
+            filename = os.path.basename(f.name)
+            print("filename: ", filename, "filetype: ", MMP.checkFileType(filename))
+            
+            with open("../json/request.json", "r") as f2:
+                json_data = f2.read()
+                print(json_data)
+                json_len = len(json_data)
+            
+            header = MMP.makeHeader(json_len, len(MMP.checkFileType(filename)), filesize)
+            print("Response Header: ", header, len(header))
+            # ヘッダーの送信
+            connection.sendall(header)
+            print("ResponseFILENAME: ",filename)
+            
+            # bodyの送信
+            converted_data = json_data.encode("utf-8") + MMP.checkFileType(filename).encode("utf-8") + f.read()
+            connection.sendall(converted_data)
+
     
     
     def deleteVideo(self, path):

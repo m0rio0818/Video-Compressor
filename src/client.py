@@ -15,12 +15,13 @@ class Client:
         self.buffer = 4096
         self.server_port = int(server_port)
         self.dpath = "../converted"
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
         
     def conncet(self):
         try:
+            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.sock.connect((self.server_address, self.server_port))
+            print("接続します。")
         except ConnectionError:
             print("サーバーが起動されていません。")
             sys.exit(1)
@@ -36,19 +37,12 @@ class Client:
             input_video_path = json_data["filepath"]
         output_filename = os.path.basename(input_video_path)
         output_filename = output_filename[:output_filename.find(".")] + "_converted"
-        print(output_filename)
-                
-        
-        while True:    
-        # if os.path.exists(input_video_path):    
-            print("starting...")
-            self.conncet()
-            self.sendData(input_video_path)
-            self.reciveResponse(output_filename)
-            
-        # else:
-        #     print("そのパスは存在しません。")
-        #     break
+        print("outputfile name:",output_filename)
+         
+        print("starting...")
+        self.conncet()
+        self.sendData(input_video_path)
+        self.reciveResponse(output_filename)
                             
         
     def sendData(self, path):
@@ -122,21 +116,19 @@ class Client:
             
     def reciveResponse(self, filename):
         try:
-            while True:
-                print("今からレスポンスを待ちます。")
-                header = self.sock.recv(self.HEADER_BYTES_SIZE)
-                jsonSize = int.from_bytes(header[:16])
-                mediaTypeSize = int.from_bytes(header[16:17])
-                payloadSize = int.from_bytes(header[17:])
-                print(jsonSize, mediaTypeSize, payloadSize)
-    
-                # body 受け取り
-                jsonData = self.sock.recv(jsonSize).decode()
-                mediaType = self.sock.recv(mediaTypeSize).decode()
-                
-                self.savePayload(self.sock, payloadSize, filename, mediaType)
-                break
+            print("今からレスポンスを待ちます。")
+            header = self.sock.recv(self.HEADER_BYTES_SIZE)
+            jsonSize = int.from_bytes(header[:16])
+            mediaTypeSize = int.from_bytes(header[16:17])
+            payloadSize = int.from_bytes(header[17:])
+            print(jsonSize, mediaTypeSize, payloadSize)
+
+            # body 受け取り
+            jsonData = self.sock.recv(jsonSize).decode()
+            mediaType = self.sock.recv(mediaTypeSize).decode()
             
+            self.savePayload(self.sock, payloadSize, filename, mediaType)
+
         except Exception as e:
             print("Err", e)
             

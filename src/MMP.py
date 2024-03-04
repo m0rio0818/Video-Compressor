@@ -10,7 +10,8 @@ class MMP:
         return filename[filename.find(".")+1:]     
 
     # 動画を圧縮
-    def compressionData(input_file, output_file, custom):                #圧縮率(18~28)
+    def compressionData(input_file, output_file, custom):
+        #　圧縮率(18~28)          
         if custom == "high":
             rate = "18"
         elif custom == "normal":
@@ -20,11 +21,8 @@ class MMP:
         else:
             rate = "23"
         
-        print("圧縮効率: ",rate, "ファイル出力先", output_file)            
-        
-    
+        print("圧縮効率: ",rate, "ファイル出力先", output_file)               
         command = ["ffmpeg", "-i", input_file, "-c:v","libx264", "-crf", rate, "-c:a","aac", "-b:a", "128k", output_file]
-        # "ffmpeg" "-i" "./temp/something.mp4" "-c:v libx264" "-crf 23" "-c:a aac" "-b:a 128k" "./temp/v.mp4"
         subprocess.call(command)
         return 
     

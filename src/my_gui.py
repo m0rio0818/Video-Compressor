@@ -135,14 +135,17 @@ class ViewContlloer:
                     self.client.start()        
                     
             elif ViewContlloer.convertionMethod == "MP3変換":
-                makeRequest_JsonFile(ViewContlloer.filePath, method, ViewContlloer.selected_radio, "mp3", None,)
-                self.client.start() 
                 print("MP3変換で決定")
+                makeRequest_JsonFile(ViewContlloer.filePath, method, ViewContlloer.selected_radio, "mp3", None,)
+                self.client.start()
                 
             elif ViewContlloer.convertionMethod == "GIF作成":
                 print("GIF作成で決定")
             elif ViewContlloer.convertionMethod == "WEBM作成":
                 print("WEBM作成で決定")
+                
+            
+    
     
     def clearAllElement(self):
         self.frame.destroy()
