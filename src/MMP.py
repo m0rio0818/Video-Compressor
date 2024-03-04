@@ -64,12 +64,14 @@ class MMP:
             subprocess.call(command)
     
     # 動画のアスペクト比を変更
-    def changeAspect(input, output, width, height):
-        print("HEIGHT: ",width, "HEIGHT", height)
-        if (height == None or height <= 0 or width == None or width <= 0): 
-            command = ["ffmpeg","-i", input,  "-vf", "setsar=-1:-1",  output]
+    def changeAspect(input, output, params):
+        width = int(params[0])
+        height = int(params[1])
+        print("HEIGHT: ",width, type(width),"HEIGHT", height, type(height))
+        if (height == None or width == None or height <= 0 or width <= 0): 
+            command = ["ffmpeg","-y", "-i",  input,  "-c", "copy", "--aspect -1:-1",  output]
         else:
-            command = ["ffmpeg","-i", input,  "-vf", "setsar={}:{}".format(width, height),  output]
+            command = ["ffmpeg", "-y", "-i", input,  "-c", "copy", "--aspect {}:{}".format(width, height),  output]
         subprocess.call(command)
         return
     

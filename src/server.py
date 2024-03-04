@@ -55,7 +55,7 @@ class Server:
             self.loadAndSend(connection, output_path)
             self.deleteVideo(output_path)   
         elif method == "aspect":
-            MMP.changeAspect(input_path, output_path, 0, params[1])
+            MMP.changeAspect(input_path, output_path, params)
             self.loadAndSend(connection, output_path)
             self.deleteVideo(output_path)   
         elif method == "mp3":
@@ -63,7 +63,7 @@ class Server:
             self.loadAndSend(connection, output_path)
             self.deleteVideo(output_path)   
         elif method == "gifwebm":
-            MMP.makeGIForWEBM(input_path, output_path, params[0])
+            MMP.makeGIForWEBM(input_path, output_path, params)
             self.loadAndSend(connection, output_path)
             self.deleteVideo(output_path)   
                 

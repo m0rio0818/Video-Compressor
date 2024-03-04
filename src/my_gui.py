@@ -155,11 +155,6 @@ class ViewContlloer:
         
     def only_numbers(self, char):
         return char.isdigit() and (len(char) <= 4 and len(char) > 0)
-    
-    # def destroyCustomInput(self):
-    #     ViewContlloer.entryH.destroy()
-    #     ViewContlloer.entryW.destroy()
-    #     ViewContlloer.x_label.destroy()
 
     def on_radio_selected(self, radio_var):
         ViewContlloer.selected_radio = radio_var.get()
@@ -173,7 +168,6 @@ class ViewContlloer:
             for i in range(len(radio_label)):
                 radio = tk.Radiobutton(self.frame, value=radio_label[i], variable=radio_var, text=radio_label[i], command=lambda: self.on_radio_selected(radio_var))
                 radio.place(x = self.width/2, y = i * 20)
-
             print("圧縮だな〜")
             
         elif type == "解像度変更":
@@ -201,7 +195,6 @@ class ViewContlloer:
         
         elif type == "WEBM作成":
             print("WEBMを作成しま〜す!!")
-
             
             
     def makeUI(self):

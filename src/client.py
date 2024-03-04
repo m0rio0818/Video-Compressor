@@ -3,6 +3,7 @@ import os
 import sys
 import json
 from MMP import MMP
+import threading
 
 
 class Client:
@@ -33,20 +34,21 @@ class Client:
         with open("../json/request.json", "r") as f:
             json_data = json.loads(f.read())
             input_video_path = json_data["filepath"]
-            
-
         output_filename = os.path.basename(input_video_path)
         output_filename = output_filename[:output_filename.find(".")] + "_converted"
         print(output_filename)
-                    
-        if os.path.exists(input_video_path):    
+                
+        
+        while True:    
+        # if os.path.exists(input_video_path):    
             print("starting...")
             self.conncet()
             self.sendData(input_video_path)
             self.reciveResponse(output_filename)
             
-        else:
-            print("そのパスは存在しません。")
+        # else:
+        #     print("そのパスは存在しません。")
+        #     break
                             
         
     def sendData(self, path):
@@ -101,6 +103,8 @@ class Client:
             output_path = "{}/{}.{}".format(self.dpath, filename + str(count), mediaType)
             print(output_path)
             count += 1
+            
+        print("outputpath は {}になりました".format(output_path))
         
         with open(output_path, "wb") as f:
             while filesize > 0:
@@ -125,21 +129,20 @@ class Client:
                 mediaTypeSize = int.from_bytes(header[16:17])
                 payloadSize = int.from_bytes(header[17:])
                 print(jsonSize, mediaTypeSize, payloadSize)
-
-                
+    
                 # body 受け取り
                 jsonData = self.sock.recv(jsonSize).decode()
                 mediaType = self.sock.recv(mediaTypeSize).decode()
                 
                 self.savePayload(self.sock, payloadSize, filename, mediaType)
-                # if data:
-                #     print("Server response:", data)
-                # else:
-                #     break
                 break
+            
+        except Exception as e:
+            print("Err", e)
+            
         finally:
             print("Closing socket")
-            self.sock.close()
+            self.sock.close()      
               
     
 
