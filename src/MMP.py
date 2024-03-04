@@ -36,25 +36,32 @@ class MMP:
             height = params[1]
             print("Width: ",width, "Height: ", height)
             if (height == None or height == 0): 
-                command = ["ffmpeg","-i", input,  "-s", "scale=-1:{}".format(width),   output, ]
+                command = ["ffmpeg","-i", input,  "-s", "scale=-1:{}".format(width),   output]
             elif (width == None or width == 0):
                 command = ["ffmpeg","-i", input,  "-s", "scale={}:-1".format(height),  output]
             else:
                 command = ["ffmpeg","-i", input,  "-vf", "scale={}:{}".format(width, height), output]
             subprocess.call(command)
         else:
+            print("今から変換を始めます。！！！！", option, output)
             if (option == "360p"):
+                command = ["ffmpeg","-i", input,  "-vf", "scale=480:320", "-c:a", "copy", output]
                 print("360p")
             elif (option == "720p"):
+                command = ["ffmpeg","-i", input,  "-vf", "scale=1280:720", "-c:a", "copy", output]
                 print("720p")
             elif (option == "1080p"):
+                command = ["ffmpeg","-i", input,  "-vf", "scale=1920:1080","-c:a", "copy", output]
                 print("1080p")
             elif (option == "WQHD"):
+                command = ["ffmpeg","-i", input,  "-vf", "scale=2048:1152", "-c:a", "copy",output]
                 print("WQHD")
             elif (option == "4K"):
+                command = ["ffmpeg","-i", input,  "-vf", "scale=3840:2160","-c:a", "copy", output]
                 print("4K")
             else:
                 return
+            subprocess.call(command)
     
     # 動画のアスペクト比を変更
     def changeAspect(input, output, width, height):

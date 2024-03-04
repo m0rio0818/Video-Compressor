@@ -135,8 +135,10 @@ class ViewContlloer:
                     self.client.start()        
                     
             elif ViewContlloer.convertionMethod == "MP3変換":
-                makeRequest_JsonFile(ViewContlloer.filePath, method, None, "mp3", None) 
+                makeRequest_JsonFile(ViewContlloer.filePath, method, ViewContlloer.selected_radio, "mp3", None,)
+                self.client.start() 
                 print("MP3変換で決定")
+                
             elif ViewContlloer.convertionMethod == "GIF作成":
                 print("GIF作成で決定")
             elif ViewContlloer.convertionMethod == "WEBM作成":
@@ -171,7 +173,7 @@ class ViewContlloer:
             for i in range(len(radio_label)):
                 radio = tk.Radiobutton(self.frame, value=radio_label[i], variable=radio_var, text=radio_label[i], command=lambda: self.on_radio_selected(radio_var))
                 radio.place(x = self.width/2, y = i * 20)
-        
+
             print("圧縮だな〜")
             
         elif type == "解像度変更":
@@ -187,6 +189,11 @@ class ViewContlloer:
             print("アスペクト比変更しようかな〜")
             
         elif type == "MP3変換":
+            radio_label = ["high", "normal", "low"]
+            radio_var = tk.StringVar(value=None)
+            for i in range(len(radio_label)):
+                radio = tk.Radiobutton(self.frame, value=radio_label[i], variable=radio_var, text=radio_label[i], command=lambda: self.on_radio_selected(radio_var))
+                radio.place(x = self.width/2, y = i * 20)
             print("MP3変換しちゃう")
             
         elif type == "GIF作成":

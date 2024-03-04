@@ -23,7 +23,6 @@ class Server:
         
     def savePayload(self, connection, filesize, input_path):
         totalRecived = 0
-        fSize = filesize
         if not os.path.exists(self.dpath):
             os.makedirs(self.dpath)
                     
@@ -60,7 +59,7 @@ class Server:
             self.loadAndSend(connection, output_path)
             self.deleteVideo(output_path)   
         elif method == "mp3":
-            MMP.changeToMp3(input_path, output_path, params[0])
+            MMP.changeToMp3(input_path, output_path, custom)
             self.loadAndSend(connection, output_path)
             self.deleteVideo(output_path)   
         elif method == "gifwebm":
@@ -105,7 +104,7 @@ class Server:
                 self.savePayload(connection, payloadSize, input_path)
                 print("ファイルは一旦サーバーに保存されました。")
                 
-                self.covert_MP4_Video(connection, input_path, output_path, method, params)
+                self.covert_MP4_Video(connection, input_path, output_path, method, custom, params)
             
             except OSError as e:
                 print(f"Error: {e}")
